@@ -1,18 +1,25 @@
 package Tree.BTree;
 
-public class BTree<K,V> {
-    public boolean insert(K key,V value) {
-        return false;
-    }
-    public  V Find(){
-        return null;
-    }
-    public boolean Delete(K key){
-        return false;
-    }
+public class BTree<T extends  Comparable<T>> {
+    private int Rank;
+    private  Node<T> Root;
 
+    public boolean insert(T value) {
+        return false;
+    }
+    public  T FindEqualByKey(T key){
+
+       return this.Root.findValueByKey(key);
+    }
+    public boolean Delete(T key){
+        return false;
+    }
     public boolean Construct(){
         return false;
     }
+
+
+
+
 
 }
