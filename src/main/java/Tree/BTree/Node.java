@@ -94,7 +94,7 @@ public class Node<T extends Comparable<T>> {
         return ChildRight;
     }
     public Node<T> createLeftChild() {
-        Node<T> LeftChild = new Node<>(Rank, this);
+        Node<T> LeftChild = new Node<T>(Rank, this);
         for (int i = 0; i < this.Rank / 2; i++)
             LeftChild.innerPut(Keys.get(i));
         return LeftChild;

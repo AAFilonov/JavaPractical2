@@ -16,7 +16,7 @@ class NodeTest {
         newNode = new Node<Integer>(3);
     }
 
-
+/*
     @Nested
     class PutTests{
         @ParameterizedTest
@@ -68,5 +68,5 @@ class NodeTest {
         assertEquals(1, actual);
 
     }
-
+*/
 }

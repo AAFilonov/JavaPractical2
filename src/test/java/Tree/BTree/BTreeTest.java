@@ -13,7 +13,7 @@ class BTreeTest {
     BTree<String> tree;
     @BeforeEach
     public  void init(){
-        tree = new BTree<String>();
+        tree = new BTree<String>(3);
     }
     @Nested
     class ConstructTests{
