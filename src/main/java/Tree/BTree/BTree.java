@@ -3,19 +3,27 @@ package Tree.BTree;
 import java.util.Collection;
 
 public class BTree<T extends  Comparable<T>> {
-    private int Rank;
-    private  Node<T> Root;
+     int Rank;
+     Node<T> Root;
 
     public void insert(T value) {
         if (this.isEmpty()){
             Root = new Node<T>(Rank);
-            Root.put(value);
-            return;
+        }
+        put(Root, value);
+    }
+
+     void put(Node<T> node,T val) {
+        if (node.isLeaf)
+            node.innerPut(val);
+        else {
+            Node<T> child = node.getChildByVal(val);
+            put(child,val);
         }
 
 
-        return;
     }
+
     public boolean isEmpty(){
         return this.Root==null;
     }
@@ -31,7 +39,9 @@ public class BTree<T extends  Comparable<T>> {
         return false;
     }
 
-
+    BTree(int rank){
+        this.Rank = rank;
+    }
 
 
 
