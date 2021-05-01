@@ -26,8 +26,8 @@ class BTreeTest {
         void testInsert_WhenTreeIsEmpty_ThenReturnTrue() {
             String val = "value";
 
+            tree.insert( val);
 
-            assertTrue(tree.insert( val));
         }
 
         @Disabled
@@ -36,7 +36,7 @@ class BTreeTest {
         void testInsert_WhenTreeIsEmptyWithDifferentKeys_ThenReturnTrue(Integer Key) {
             String val = "value";
 
-            assertTrue(tree.insert( val));
+           tree.insert( val);
         }
 
 
