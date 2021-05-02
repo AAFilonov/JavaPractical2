@@ -9,10 +9,10 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,16 +28,17 @@ class BTreeTest {
 
     }
     @Nested
-    class ConstructTests{
+    class IOUderstandingTest {
         @TempDir
-        File anotherTempDir;
+        File TempDir;
 
         @Test
-        void givenFieldWithTempDirectoryFile_whenWriteToFile_thenContentIsCorrect() throws IOException {
-            assertTrue(this.anotherTempDir.isDirectory(), "Should be a directory ");
+        void writingToTestDirWork() throws IOException {
+            assertTrue(this.TempDir.isDirectory(), "Should be a directory ");
 
-            File letters = new File(anotherTempDir, "letters.txt");
+            File letters = new File(TempDir, "letters.txt");
             List<String> lines = Arrays.asList("x", "y", "z");
+
 
             Files.write(letters.toPath(), lines);
 
@@ -46,6 +47,51 @@ class BTreeTest {
                     () -> assertLinesMatch(lines, Files.readAllLines(letters.toPath())));
         }
 
+        @Test
+        void ReadingFromTestDirWork() throws IOException {
+            File treeContent = new File(TempDir, "treeContent.txt");
+            List<String> linesWrited = Arrays.asList("1", "2", "3");
+            Files.write(treeContent.toPath(), linesWrited);
+
+            if( Files.isReadable(treeContent.toPath())){
+                List<String> linesReaded;
+                linesReaded = Files.readAllLines(treeContent.toPath());
+                assertLinesMatch(linesWrited, linesReaded);
+            }
+            else fail();
+
+        }
+
+
+    }
+
+
+    @Nested
+    class ConstructTests{
+        @TempDir
+        File TempDir;
+
+        @Test
+        void givenFileWit123_WhenConstruct_ThenTreeShouldMatchExpectations() throws IOException {
+            File treeContent = new File(TempDir, "treeContent.txt");
+            List<String> linesWrited = Arrays.asList("1 2", "3 4", "5");
+            Files.write(treeContent.toPath(), linesWrited);
+
+            tree.construct(treeContent.toPath(), Integer.class);
+
+
+            Node<Integer> newNode =   tree.Root;
+            assertAll(
+                    () -> assertFalse(
+                            tree.isEmpty()),
+                    () -> assertEquals((Integer) 1, newNode.Childes.get(0).Keys.get(0)),
+                    () -> assertEquals((Integer) 2, newNode.Keys.get(0)),
+                    () -> assertEquals((Integer) 4, newNode.Keys.get(1)),
+                    () -> assertEquals((Integer) 3, newNode.Childes.get(1).Keys.get(0)),
+                    () -> assertEquals((Integer) 5, newNode.Childes.get(2).Keys.get(0)),
+                    () -> assertEquals( 3, newNode.Childes.size())
+            );
+        }
     }
 
     @Nested

@@ -1,11 +1,17 @@
 package Tree.BTree;
 
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.io.Reader;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.UUID.fromString;
 
 public class BTree<T extends  Comparable<T>> {
      int Rank;
@@ -41,10 +47,24 @@ public class BTree<T extends  Comparable<T>> {
     public boolean delete(T key){
         return false;
     }
-    public boolean construct(String fileName) throws IOException {
+    public boolean construct(Path filePath, Class<T> tClass) throws IOException {
 
-        try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
-            stream.forEach(System.out::println);
+        try {
+
+
+
+            List<String> lines = Files.readAllLines(filePath);
+            for (String line:lines) {
+                String[] values = line.split(" ");
+                for (String valString:values) {
+                    T val = tClass.getConstructor(String.class).newInstance(valString);
+                    this.insert(val);
+                }
+            }
+
+        }
+        catch (Exception ex){
+            System.out.println(ex.getMessage());
         }
         return false;
     }
