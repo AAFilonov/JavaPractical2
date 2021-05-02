@@ -26,7 +26,7 @@ public class Node<T extends Comparable<T>> {
         return retIndex;
     }
 
-    private Integer getMiddleChildIndex(T val) {
+    Integer getMiddleChildIndex(T val) {
         Integer retIndex = null;
         for (int i = 1; i < Keys.size() - 1; i++) {
             if (isLeftGreater(val, Keys.get(i - 1)) &&
@@ -49,45 +49,92 @@ public class Node<T extends Comparable<T>> {
         }
     }
 
-    public void splitNode() {
+    void splitNode() {
         if (Parent != null)
             splitNonRoot();
         else
             splitRoot();
     }
 
-    public void splitNonRoot() {
-        Node<T> RightChild = createRightChild();
-        Parent.Childes.add(RightChild);
-        T midVal = getMiddleKey();
-        Parent.insertKey(midVal);
+    void splitNonRoot() {
+        Parent.Childes.add(initRightkeys(this.Parent));
+        removeRightKeys();
+        pushMiddleKeyToParent();
     }
 
-    public T getMiddleKey() {
+
+    void pushMiddleKeyToParent(){
+        T middleKey=getMiddleKey();
+        this.Keys.remove(middleKey);
+        Parent.insertKey(middleKey);
+    }
+
+    T getMiddleKey() {
         return Keys.get(this.Rank / 2);
     }
 
 
-    public void splitRoot() {
-        this.Childes.add(createLeftChild());
-        this.Childes.add(createRightChild());
-        RemovekeysExceptMiddle();
+    void splitRoot() {
+        if (isLeaf) {
+            splitLeaf();
 
+        } else {
+            splitNoNLeaf();
+        }
+    }
+    void splitLeaf() {
+        this.Childes.add(initLeftKeys(this));
+        this.Childes.add(initRightkeys(this));
+        RemovekeysExceptMiddle();
         this.isLeaf = false;
     }
 
-    public Node<T> createRightChild() {
-        Node<T> ChildRight = new Node<T>(Rank, this);
-        int middleVal = this.Rank / 2;
-        for (int i = middleVal + 1; i < Keys.size(); i++) {
+    void splitNoNLeaf() {
+        Node<T> ChildLeft = initLeftChild();
+        Node<T> ChildRight = initRightChild();
+        Childes.clear();
+
+        this.Childes.add(ChildLeft);
+        this.Childes.add(ChildRight);
+        this.RemovekeysExceptMiddle();
+    }
+
+    Node<T> initLeftChild() {
+        Node<T> Childleft = initLeftKeys(this);
+        for (int i = 0; i < Childes.size() / 2; i++) {
+            Childleft.setChild(this.Childes.get(i));
+
+        }
+        return Childleft;
+
+    }
+
+    Node<T> initRightChild() {
+        Node<T> ChildRight = initRightkeys(this);
+        for (int  i = Childes.size() / 2; i < Childes.size() ; i++) {
+            ChildRight.setChild(this.Childes.get(i));
+
+        }
+        return ChildRight;
+    }
+
+    void setChild(Node<T> child) {
+        child.Parent = this;
+        this.Childes.add(child);
+    }
+
+    public Node<T> initRightkeys(Node<T> parent) {
+        Node<T> ChildRight = new Node<T>(Rank, parent);
+        int middleValIndex = this.Rank / 2;
+        for (int i = middleValIndex + 1; i < Keys.size(); i++) {
             ChildRight.insertKey(Keys.get(i));
 
         }
         return ChildRight;
     }
 
-    public Node<T> createLeftChild() {
-        Node<T> LeftChild = new Node<T>(Rank, this);
+    public Node<T> initLeftKeys(Node<T> parent) {
+        Node<T> LeftChild = new Node<T>(Rank, parent);
         for (int i = 0; i < this.Rank / 2; i++)
             LeftChild.insertKey(Keys.get(i));
         return LeftChild;
