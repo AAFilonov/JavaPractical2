@@ -1,6 +1,11 @@
 package Tree.BTree;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collection;
+import java.io.Reader;
+import java.util.stream.Stream;
 
 public class BTree<T extends  Comparable<T>> {
      int Rank;
@@ -29,14 +34,18 @@ public class BTree<T extends  Comparable<T>> {
         return this.Root==null;
     }
 
-    public Collection<T> FindEqualsByKey(T key){
+    public Collection<T> findEqualsByKey(T key){
 
        return null;
     }
-    public boolean Delete(T key){
+    public boolean delete(T key){
         return false;
     }
-    public boolean Construct(){
+    public boolean construct(String fileName) throws IOException {
+
+        try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
+            stream.forEach(System.out::println);
+        }
         return false;
     }
 

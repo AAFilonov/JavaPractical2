@@ -4,8 +4,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,30 +29,25 @@ class BTreeTest {
     }
     @Nested
     class ConstructTests{
-
-    }
-    @Nested
-    class InsertTests{
+        @TempDir
+        File anotherTempDir;
 
         @Test
-        void testInsert_WhenTreeIsEmpty_ThenReturnTrue() {
+        void givenFieldWithTempDirectoryFile_whenWriteToFile_thenContentIsCorrect() throws IOException {
+            assertTrue(this.anotherTempDir.isDirectory(), "Should be a directory ");
 
+            File letters = new File(anotherTempDir, "letters.txt");
+            List<String> lines = Arrays.asList("x", "y", "z");
 
-            tree.insert(1);
+            Files.write(letters.toPath(), lines);
 
+            assertAll(
+                    () -> assertTrue(Files.exists(letters.toPath()), "File should exist"),
+                    () -> assertLinesMatch(lines, Files.readAllLines(letters.toPath())));
         }
-
-        @Disabled
-        @ParameterizedTest
-        @ValueSource(ints = {2,0,-2,Integer.MAX_VALUE,Integer.MIN_VALUE})
-        void testInsert_WhenTreeIsEmptyWithDifferentKeys_ThenReturnTrue(Integer key) {
-
-
-           tree.insert( key);
-        }
-
 
     }
+
     @Nested
     class DeleteTests{
 
@@ -54,7 +58,7 @@ class BTreeTest {
     }
 
     @Nested
-    class PutTests{
+    class InsertTests{
         @ParameterizedTest
         @ValueSource(ints = {2, 0, -2, Integer.MAX_VALUE, Integer.MIN_VALUE})
         void testPutVal_WhenAndPut1Val_ThenShouldBeOk(Integer val) {
