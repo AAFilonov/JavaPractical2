@@ -200,10 +200,44 @@ class BTreeTest {
 
         @Test
         void testSplit_123() {
+            List<Integer> range = Arrays.asList(1, 2, 3);
+            tree.insertRange(range);
+            Node<Integer> newNode = tree.Root;
+            assertAll(
 
-            tree.insert(1);
-            tree.insert(2);
-            tree.insert(3);
+                    () -> assertEquals((Integer) 1, newNode.Childes.get(0).Keys.get(0)),
+                    () -> assertEquals((Integer) 2, newNode.Keys.get(0)),
+                    () -> assertEquals((Integer) 3, newNode.Childes.get(1).Keys.get(0))
+            );
+        }
+        @Test
+        void testSplit_132() {
+            List<Integer> range = Arrays.asList(1, 3, 2);
+            tree.insertRange(range);
+            Node<Integer> newNode = tree.Root;
+            assertAll(
+
+                    () -> assertEquals((Integer) 1, newNode.Childes.get(0).Keys.get(0)),
+                    () -> assertEquals((Integer) 2, newNode.Keys.get(0)),
+                    () -> assertEquals((Integer) 3, newNode.Childes.get(1).Keys.get(0))
+            );
+        }
+        @Test
+        void testSplit_231() {
+            List<Integer> range = Arrays.asList(2,3,1);
+            tree.insertRange(range);
+            Node<Integer> newNode = tree.Root;
+            assertAll(
+
+                    () -> assertEquals((Integer) 1, newNode.Childes.get(0).Keys.get(0)),
+                    () -> assertEquals((Integer) 2, newNode.Keys.get(0)),
+                    () -> assertEquals((Integer) 3, newNode.Childes.get(1).Keys.get(0))
+            );
+        }
+        @Test
+        void testSplit_111() {
+            List<Integer> range = Arrays.asList(1,1,1);
+            tree.insertRange(range);
             Node<Integer> newNode = tree.Root;
             assertAll(
 
@@ -321,19 +355,9 @@ class BTreeTest {
         @Test
 
         void given1_18Tree_WhenValueInserted_ThenFindReturnThisValue() {
-            List<Integer> range = Arrays.asList(1, 2, 3, 4, 5, 6, 7);
+            List<Integer> range = Arrays.asList(1, 2, 3, 4, 5, 6, 7,8,9,10,11,12,13,14,15,16,17,18);
             tree.insertRange(range);
-            tree.insert(8);
-            tree.insert(9);
-            tree.insert(10);
-            tree.insert(11);
-            tree.insert(12);
-            tree.insert(13);
-            tree.insert(14);
-            tree.insert(15);
-            tree.insert(16);
-            tree.insert(17);
-            tree.insert(18);
+
 
 
 
@@ -363,7 +387,36 @@ class BTreeTest {
             );
 
 
+        }
+        void given1_18Tree_WhenValuesInsertedBackwards_ThenFindReturnThisValue() {
+            List<Integer> range = Arrays.asList(18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1);
+            tree.insertRange(range);
 
+
+            Node<Integer> Child4 = tree.Root.Childes.get(0);
+            Node<Integer> Child12 = tree.Root.Childes.get(1);
+            Node<Integer> Child2 = Child4.Childes.get(0);
+            Node<Integer> Child6 = Child4.Childes.get(1);
+            Node<Integer> Child10 = Child12.Childes.get(0);
+            Node<Integer> Child14_16 = Child12.Childes.get(1);
+
+
+            assertAll(
+                    () -> assertEquals(8, tree.Root.Keys.get(0)),
+
+                    () -> assertEquals(4, Child4.Keys.get(0)),
+
+                    () -> assertEquals(12, Child12.Keys.get(0)),
+
+                    () -> assertEquals(2, Child2.Keys.get(0)),
+                    () -> assertEquals(6, Child6.Keys.get(0)),
+
+                    () -> assertEquals(10, Child10.Keys.get(0)),
+
+                    () -> assertEquals(14, Child14_16.Keys.get(0)),
+                    () -> assertEquals(16, Child14_16.Keys.get(1))
+
+            );
         }
     }
 
