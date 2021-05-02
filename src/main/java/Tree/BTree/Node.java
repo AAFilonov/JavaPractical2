@@ -10,7 +10,7 @@ public class Node<T extends Comparable<T>> {
     ArrayList<T> Keys;
     Node<T> Parent;
 
-    Node<T> getChildByVal(T val) {
+    Node<T> getChildByKey(T val) {
         int ChildIndex = getChildIndex(val);
         return Childes.get(ChildIndex);
     }
@@ -25,6 +25,10 @@ public class Node<T extends Comparable<T>> {
             retIndex = getMiddleChildIndex(val);
         return retIndex;
     }
+    Node<T> getMiddleChildByKey(T key) {
+        return this.Childes.get( getMiddleChildIndex(key));
+    }
+
 
     Integer getMiddleChildIndex(T val) {
         Integer retIndex = null;
@@ -57,14 +61,26 @@ public class Node<T extends Comparable<T>> {
     }
 
     void splitNonRoot() {
-        Parent.Childes.add(initRightkeys(this.Parent));
-        removeRightKeys();
-        pushMiddleKeyToParent();
+        if (isLeaf) {
+            Parent.Childes.add(initRightkeys(this.Parent));
+            removeRightKeys();
+            pushMiddleKeyToParent();
+
+        } else {
+            Parent.Childes.add(initRightChild(this.Parent));
+            removeRightKeys();
+            removeRightChildes();
+            pushMiddleKeyToParent();
+
+        }
+
+
+
     }
 
 
-    void pushMiddleKeyToParent(){
-        T middleKey=getMiddleKey();
+    void pushMiddleKeyToParent() {
+        T middleKey = getMiddleKey();
         this.Keys.remove(middleKey);
         Parent.insertKey(middleKey);
     }
@@ -82,6 +98,7 @@ public class Node<T extends Comparable<T>> {
             splitNoNLeaf();
         }
     }
+
     void splitLeaf() {
         this.Childes.add(initLeftKeys(this));
         this.Childes.add(initRightkeys(this));
@@ -91,7 +108,7 @@ public class Node<T extends Comparable<T>> {
 
     void splitNoNLeaf() {
         Node<T> ChildLeft = initLeftChild();
-        Node<T> ChildRight = initRightChild();
+        Node<T> ChildRight = initRightChild(this);
         Childes.clear();
 
         this.Childes.add(ChildLeft);
@@ -105,16 +122,18 @@ public class Node<T extends Comparable<T>> {
             Childleft.setChild(this.Childes.get(i));
 
         }
+        Childleft.isLeaf=false;
         return Childleft;
 
     }
 
-    Node<T> initRightChild() {
-        Node<T> ChildRight = initRightkeys(this);
-        for (int  i = Childes.size() / 2; i < Childes.size() ; i++) {
+    Node<T> initRightChild(Node<T> parent) {
+        Node<T> ChildRight = initRightkeys(parent);
+        for (int i = Childes.size() / 2; i < Childes.size(); i++) {
             ChildRight.setChild(this.Childes.get(i));
 
         }
+        ChildRight.isLeaf=false;
         return ChildRight;
     }
 
@@ -148,91 +167,45 @@ public class Node<T extends Comparable<T>> {
 
 
     private void removeLeftKeys() {
-        for (int i = 0; i < this.Rank / 2; i++)
+        int size = Keys.size();
+        for (int i = 0; i < size / 2; i++)
             Keys.remove(i);
     }
 
     private void removeRightKeys() {
-        for (int i = this.Rank / 2 + 1; i < Keys.size(); i++) {
+        int size = Keys.size();
+        for (int i = size / 2 + 1; i < size; i++) {
             Keys.remove(i);
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* попытка сделать поиск
-
-
-    Collection<T> ReturnCollection;
-    Collection<T> getEqualsByKey(T key){
-        fillRetCollectionEq(key);
-        return CleanReturn();
-    }
-
-
-
-    private void fillRetCollectionEq(T key){
-        CheckFirstEq(key);
-        CheckMiddleEq(key);
-        CheckLastEq(key);
-    }
-    Collection<T> CleanReturn(){
-        Collection<T> collCopy = ReturnCollection;
-        ReturnCollection.clear();
-        return collCopy;
-    }
-    private void CheckMiddleEq(T key){
-        for(int i=0;i<this.Rank-1;i++){
-            CheckKeyEq(key,Values.get(i));
+    private void removeRightChildes() {
+        ArrayList<Node<T>> childesToDelete = new ArrayList<Node<T>>();
+        for (int i =  Childes.size() / 2 ; i < Childes.size() ; i++) {
+            childesToDelete.add(Childes.get(i));
         }
-    }
-    private void CheckFirstEq(T key){
-        if(areEqual(key,Values.get(0))) {
-            ReturnCollection.add(Values.get(0));
-
-        }
-
-
-    }
-    private void CheckLastEq(T key){
-        if(areEqual(key,Values.get(0))) {
-            ReturnCollection.add(Values.get(this.Rank-1));
-        }
-        else{
-            Collection<T> childVals=  Childs.get(this.Rank-1).getEqualsByKey(key);
-            ReturnCollection.addAll(childVals);
-        }
-
-    }
-
-    private void CheckKeyEq(T key, T value){
-        if(areEqual(key,value))
-        {
-            ReturnCollection.add(value);
+        for(Node<T>child:childesToDelete){
+            Childes.remove(child);
         }
     }
 
-*/
 
-    private T getFirstKey() {
+    T getFirstKey() {
         return Keys.get(0);
     }
 
-    private T getLastKey() {
+    T getLastKey() {
         return Keys.get(Keys.size() - 1);
     }
+
+    Node<T> getFirstChild() {
+        return Childes.get(0);
+    }
+
+    Node<T> getLastChild() {
+        return Childes.get(Childes.size() - 1);
+    }
+
 
     private boolean areEqual(T key1, T key2) {
         return key1.compareTo(key2) == 0;
