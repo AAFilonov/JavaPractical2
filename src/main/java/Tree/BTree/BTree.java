@@ -7,21 +7,22 @@ public class BTree<T extends  Comparable<T>> {
      Node<T> Root;
 
     public void insert(T value) {
-        if (this.isEmpty()){
-            Root = new Node<T>(Rank);
-        }
+        if (this.isEmpty()) Root = new Node<T>(Rank);
         put(Root, value);
     }
 
      void put(Node<T> node,T val) {
         if (node.isLeaf)
-            node.innerPut(val);
+            node.insertKey(val);
         else {
-            Node<T> child = node.getChildByVal(val);
-            put(child,val);
+            findLeaf(node, val);
         }
 
 
+    }
+    void findLeaf(Node<T> node, T val){
+        Node<T> child = node.getChildByVal(val);
+        put(child,val);
     }
 
     public boolean isEmpty(){

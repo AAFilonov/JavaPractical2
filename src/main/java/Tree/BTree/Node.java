@@ -12,24 +12,18 @@ public class Node<T extends Comparable<T>> {
 
     Node<T> getChildByVal(T val) {
         int ChildIndex = getChildIndex(val);
-       return Childes.get(ChildIndex);
-
+        return Childes.get(ChildIndex);
     }
 
     Integer getChildIndex(T val) {
         Integer retIndex = null;
-
         if (isLeftLesser(val, this.getFirstKey()))
             retIndex = 0;
-
         else if (isLeftGreater(val, this.getLastKey()))
             retIndex = Childes.size() - 1;
-
-        else {
+        else
             retIndex = getMiddleChildIndex(val);
-        }
         return retIndex;
-
     }
 
     private Integer getMiddleChildIndex(T val) {
@@ -44,19 +38,18 @@ public class Node<T extends Comparable<T>> {
         return retIndex;
     }
 
-    void innerPut(T val) {
+    void insertKey(T val) {
 
         Keys.add(val);
         Collections.sort(Keys);
 
         if (Keys.size() == this.Rank) {
-            split();
+            splitNode();
 
         }
     }
 
-
-    public void split() {
+    public void splitNode() {
         if (Parent != null)
             splitNonRoot();
         else
@@ -67,14 +60,12 @@ public class Node<T extends Comparable<T>> {
         Node<T> RightChild = createRightChild();
         Parent.Childes.add(RightChild);
         T midVal = getMiddleKey();
-        Parent.innerPut(midVal);
+        Parent.insertKey(midVal);
     }
 
     public T getMiddleKey() {
         return Keys.get(this.Rank / 2);
     }
-
-
 
 
     public void splitRoot() {
@@ -84,19 +75,21 @@ public class Node<T extends Comparable<T>> {
 
         this.isLeaf = false;
     }
+
     public Node<T> createRightChild() {
         Node<T> ChildRight = new Node<T>(Rank, this);
-        int middleVal =this.Rank / 2 ;
-        for (int i = middleVal+ 1; i < Keys.size(); i++) {
-            ChildRight.innerPut(Keys.get(i));
+        int middleVal = this.Rank / 2;
+        for (int i = middleVal + 1; i < Keys.size(); i++) {
+            ChildRight.insertKey(Keys.get(i));
 
         }
         return ChildRight;
     }
+
     public Node<T> createLeftChild() {
         Node<T> LeftChild = new Node<T>(Rank, this);
         for (int i = 0; i < this.Rank / 2; i++)
-            LeftChild.innerPut(Keys.get(i));
+            LeftChild.insertKey(Keys.get(i));
         return LeftChild;
     }
 
@@ -105,7 +98,6 @@ public class Node<T extends Comparable<T>> {
         removeLeftKeys();
 
     }
-
 
 
     private void removeLeftKeys() {
