@@ -110,7 +110,7 @@ class BTreeTest {
         void given1234567_WhenValueInserted_ThenFindReturnThisValue(Integer val) {
             tree.insert(val);
 
-            ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.find(val);
+            ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findEqual(val);
 
 
             assertAll(
@@ -124,7 +124,7 @@ class BTreeTest {
             List<Integer> range = Arrays.asList(1, 2, 3);
             tree.insertRange(range);
 
-            ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.find(val);
+            ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findEqual(val);
 
             assertAll(
                     () -> assertEquals(val, actualVals.get(0)),
@@ -138,7 +138,7 @@ class BTreeTest {
             List<Integer> range = Arrays.asList(1, 2, 3, 4, 5, 6, 7);
             tree.insertRange(range);
 
-            ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.find(val);
+            ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findEqual(val);
 
             assertAll(
                     () -> assertEquals(val, actualVals.get(0)),
@@ -151,11 +151,20 @@ class BTreeTest {
             List<Integer> range = Arrays.asList(1, 2, 3, 4, 5, 6, 7,8,9,10,11,12,13,14,15,16,17,18);
             tree.insertRange(range);
 
-            ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.find(val);
+            ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findEqual(val);
 
             assertAll(
                     () -> assertEquals(val, actualVals.get(0)),
                     () -> assertEquals((Integer) 1, actualVals.size()));
+        }
+        @ParameterizedTest
+        @ValueSource(ints = {1, 2, 3, 4, 5, 6, 7,8,9,10,11,12,13,14,15,16,17,18})
+        void given1_18Tree_WhenValuesInsertedBackwards_ThenFindReturnThisValue(Integer Val) {
+            List<Integer> range = Arrays.asList(18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1);
+            tree.insertRange(range);
+            ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findEqual(Val);
+
+            assertEquals(Val,actualVals.get(0) );
         }
 
 
@@ -165,7 +174,7 @@ class BTreeTest {
             List<Integer> range = Arrays.asList(1, 2, 3, 4, 5, 6, 7);
             tree.insertRange(range);
 
-            ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.find(val);
+            ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findEqual(val);
 
             assertEquals(true, actualVals.isEmpty());
         }
@@ -242,8 +251,8 @@ class BTreeTest {
             assertAll(
 
                     () -> assertEquals((Integer) 1, newNode.Childes.get(0).Keys.get(0)),
-                    () -> assertEquals((Integer) 2, newNode.Keys.get(0)),
-                    () -> assertEquals((Integer) 3, newNode.Childes.get(1).Keys.get(0))
+                    () -> assertEquals((Integer) 1, newNode.Keys.get(0)),
+                    () -> assertEquals((Integer) 1, newNode.Childes.get(1).Keys.get(0))
             );
         }
 
@@ -353,7 +362,6 @@ class BTreeTest {
         }
 
         @Test
-
         void given1_18Tree_WhenValueInserted_ThenFindReturnThisValue() {
             List<Integer> range = Arrays.asList(1, 2, 3, 4, 5, 6, 7,8,9,10,11,12,13,14,15,16,17,18);
             tree.insertRange(range);
@@ -362,61 +370,105 @@ class BTreeTest {
 
 
             Node<Integer> Child4 = tree.Root.Childes.get(0);
-            Node<Integer> Child12 = tree.Root.Childes.get(1);
             Node<Integer> Child2 = Child4.Childes.get(0);
+            Node<Integer> Child1 = Child2.Childes.get(0);
+            Node<Integer> Child3 = Child2.Childes.get(1);
             Node<Integer> Child6 = Child4.Childes.get(1);
+            Node<Integer> Child5 = Child6.Childes.get(0);
+            Node<Integer> Child7 = Child6.Childes.get(1);
+
+            Node<Integer> Child12 = tree.Root.Childes.get(1);
             Node<Integer> Child10 = Child12.Childes.get(0);
+            Node<Integer> Child9 = Child10.Childes.get(0);
+            Node<Integer> Child11 = Child10.Childes.get(1);
+
             Node<Integer> Child14_16= Child12.Childes.get(1);
+            Node<Integer> Child13 = Child14_16.Childes.get(0);
+            Node<Integer> Child15 = Child14_16.Childes.get(1);
+            Node<Integer> Child17_18 = Child14_16.Childes.get(2);
 
 
             assertAll(
                     () -> assertEquals(8, tree.Root.Keys.get(0)),
-
                     () -> assertEquals(4, Child4.Keys.get(0)),
+                    () -> assertEquals(2, Child2.Keys.get(0)),
+                    () -> assertEquals(1, Child1.Keys.get(0)),
+                    () -> assertEquals(3, Child3.Keys.get(0)),
+                    () -> assertEquals(6, Child6.Keys.get(0)),
+                    () -> assertEquals(5, Child5.Keys.get(0)),
+                    () -> assertEquals(7, Child7.Keys.get(0)),
 
                     () -> assertEquals(12, Child12.Keys.get(0)),
-
-                    () -> assertEquals(2, Child2.Keys.get(0)),
-                    () -> assertEquals(6, Child6.Keys.get(0)),
-
-                    () -> assertEquals(10, Child10.Keys.get(0)),
-
+                    () -> assertEquals(9, Child9.Keys.get(0)),
+                    () -> assertEquals(11, Child11.Keys.get(0)),
                     () -> assertEquals(14, Child14_16.Keys.get(0)),
-                    () -> assertEquals(16, Child14_16.Keys.get(1))
+                    () -> assertEquals(16, Child14_16.Keys.get(1)),
+
+                    () -> assertEquals(13, Child13.Keys.get(0)),
+                    () -> assertEquals(15, Child15.Keys.get(0)),
+
+                    () -> assertEquals(17, Child17_18.Keys.get(0)),
+                    () -> assertEquals(18, Child17_18.Keys.get(1))
+
+
 
             );
 
 
         }
-        void given1_18Tree_WhenValuesInsertedBackwards_ThenFindReturnThisValue() {
+        @Test
+        void given1_18Tree_WhenValueInsertedBakcWards_ThenFindReturnThisValue() {
             List<Integer> range = Arrays.asList(18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1);
-            tree.insertRange(range);
+            //tree.insertRange(range);
+           for (Integer val:range)
+             tree.insert(val);
 
 
-            Node<Integer> Child4 = tree.Root.Childes.get(0);
-            Node<Integer> Child12 = tree.Root.Childes.get(1);
-            Node<Integer> Child2 = Child4.Childes.get(0);
-            Node<Integer> Child6 = Child4.Childes.get(1);
-            Node<Integer> Child10 = Child12.Childes.get(0);
-            Node<Integer> Child14_16 = Child12.Childes.get(1);
+
+            Node<Integer> Child7 = tree.Root.Childes.get(0);
+            Node<Integer> Child3_5 = Child7.Childes.get(0);
+            Node<Integer> Child1_2 = Child3_5.Childes.get(0);
+            Node<Integer> Child4 = Child3_5.Childes.get(1);
+            Node<Integer> Child6 = Child3_5.Childes.get(2);
+
+            Node<Integer> Child9 = Child7.Childes.get(1);
+            Node<Integer> Child8 = Child9.Childes.get(0);
+            Node<Integer> Child10 = Child9.Childes.get(1);
+
+            Node<Integer> Child15 = tree.Root.Childes.get(1);
+            Node<Integer> Child13 = Child15.Childes.get(0);
+            Node<Integer> Child12 = Child13.Childes.get(0);
+            Node<Integer> Child14 = Child13.Childes.get(1);
+            Node<Integer> Child17 = Child15.Childes.get(1);
+            Node<Integer> Child16 = Child17.Childes.get(0);
+            Node<Integer> Child18 = Child17.Childes.get(1);
 
 
             assertAll(
-                    () -> assertEquals(8, tree.Root.Keys.get(0)),
-
+                    () -> assertEquals(11, tree.Root.Keys.get(0)),
+                    () -> assertEquals(3, Child3_5.Keys.get(0)),
+                    () -> assertEquals(5, Child3_5.Keys.get(1)),
+                    () -> assertEquals(1, Child1_2.Keys.get(0)),
+                    () -> assertEquals(2, Child1_2.Keys.get(1)),
                     () -> assertEquals(4, Child4.Keys.get(0)),
-
-                    () -> assertEquals(12, Child12.Keys.get(0)),
-
-                    () -> assertEquals(2, Child2.Keys.get(0)),
                     () -> assertEquals(6, Child6.Keys.get(0)),
-
+                    () -> assertEquals(9, Child9.Keys.get(0)),
+                    () -> assertEquals(8, Child8.Keys.get(0)),
                     () -> assertEquals(10, Child10.Keys.get(0)),
+                    () -> assertEquals(15, Child15.Keys.get(0)),
+                    () -> assertEquals(13, Child13.Keys.get(0)),
+                    () -> assertEquals(12, Child12.Keys.get(0)),
+                    () -> assertEquals(14, Child14.Keys.get(0)),
+                    () -> assertEquals(17, Child17.Keys.get(0)),
+                    () -> assertEquals(16, Child16.Keys.get(0)),
+                    () -> assertEquals(18, Child18.Keys.get(0))
 
-                    () -> assertEquals(14, Child14_16.Keys.get(0)),
-                    () -> assertEquals(16, Child14_16.Keys.get(1))
+
+
 
             );
+
+
         }
     }
 

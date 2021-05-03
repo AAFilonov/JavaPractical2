@@ -82,9 +82,15 @@ public class Node<T extends Comparable<T>> {
     void pushMiddleKeyToParent() {
         T middleKey = getMiddleKey();
         this.Keys.remove(middleKey);
+        Parent.SortChildes();
         Parent.insertKey(middleKey);
-    }
 
+    }
+    void SortChildes(){
+        Childes.sort((ch1,ch2)->
+            ch1.Keys.get(0).compareTo(ch2.Keys.get(0))
+        );
+    }
     T getMiddleKey() {
         return Keys.get(this.Rank / 2);
     }
@@ -167,15 +173,24 @@ public class Node<T extends Comparable<T>> {
 
 
     private void removeLeftKeys() {
-        int size = Keys.size();
-        for (int i = 0; i < size / 2; i++)
-            Keys.remove(i);
+        ArrayList<T> KeysToDelete = new ArrayList<T>();
+        for (int i = 0  ; i < Keys.size()/2 ; i++) {
+            KeysToDelete.add(Keys.get(i));
+        }
+        for(T key:KeysToDelete){
+            Keys.remove(key);
+        }
     }
 
     private void removeRightKeys() {
-        int size = Keys.size();
-        for (int i = size / 2 + 1; i < size; i++) {
-            Keys.remove(i);
+
+
+        ArrayList<T> KeysToDelete = new ArrayList<T>();
+        for (int i =  Keys.size() / 2+1 ; i < Keys.size() ; i++) {
+            KeysToDelete.add(Keys.get(i));
+        }
+        for(T key:KeysToDelete){
+            Keys.remove(key);
         }
     }
 
