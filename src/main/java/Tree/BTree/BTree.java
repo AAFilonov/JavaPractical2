@@ -54,49 +54,10 @@ public class BTree<T extends Comparable<T>> implements Iterable {
 
     public Collection<T> findEqual(T val) {
 
-        NodeChecker<T> params = new Search.SearchEqual<T>(val);
-        checkNode(this.Root, params);
-        return params.returnCollection;
+        NodeChecker<T> Checker = new Search.SearchEqual<T>(val);
+
+        return Checker.DoSearch(this.Root);
     }
-
-
-    void checkNode(Node<T> node, NodeChecker<T> params) {
-        if (!node.isLeaf)
-            checkAsNode(node, params);
-        else
-            checkAsLeaf(node, params);
-
-
-    }
-
-
-    void checkAsNode(Node<T> node, NodeChecker<T> params) {
-
-        for (int i = 0; i < node.Keys.size(); i++) {
-            T key = node.Keys.get(i);
-
-            if (params.isKeyRequired(key)) {
-                params.returnCollection.add(key);
-                if (params.isNeedToStop()) return;
-            }
-            if (params.isNeedToCheckChild(key)) {
-                checkNode(node.Childes.get(i), params);
-                return;
-            }
-        }
-        checkNode(node.getLastChild(), params);
-    }
-
-    void checkAsLeaf(Node<T> node, NodeChecker<T> params) {
-        for (T key : node.Keys) {
-            if (params.isKeyRequired(key)) {
-                params.returnCollection.add(key);
-                if (params.isNeedToStop()) return;
-            }
-        }
-
-    }
-
 
     void insertIfLeaf(Node<T> node, T val) {
         if (node.isLeaf)
