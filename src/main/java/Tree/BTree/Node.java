@@ -15,32 +15,22 @@ public class Node<T extends Comparable<T>> {
         return Childes.get(ChildIndex);
     }
 
-    Integer getChildIndex(T val) {
-        Integer retIndex = null;
-        if (isLeftLesser(val, this.getFirstKey()))
-            retIndex = 0;
-        else if (isLeftGreater(val, this.getLastKey()))
-            retIndex = Childes.size() - 1;
-        else
-            retIndex = getMiddleChildIndex(val);
-        return retIndex;
-    }
-    Node<T> getMiddleChildByKey(T key) {
-        return this.Childes.get( getMiddleChildIndex(key));
-    }
+    int getChildIndex(T val) {
 
-
-    Integer getMiddleChildIndex(T val) {
-        Integer retIndex = null;
-        for (int i = 1; i < Keys.size() - 1; i++) {
-            if (isLeftGreater(val, Keys.get(i - 1)) &&
-                    isLeftLesser(val, Keys.get(i))) {
-                retIndex = i;
-                break;
-            }
+        for (int i = 0; i < Keys.size(); i++) {
+            T key = Keys.get(i);
+            if (val.compareTo(key)<=0)
+               return i;
         }
-        return retIndex;
+        T lastKey =getLastKey();
+        if(val.compareTo(lastKey)>0)
+            return   Childes.size()-1;
+        else return -1;
     }
+
+
+
+
 
     void insertKey(T val) {
 
@@ -222,17 +212,7 @@ public class Node<T extends Comparable<T>> {
     }
 
 
-    private boolean areEqual(T key1, T key2) {
-        return key1.compareTo(key2) == 0;
-    }
 
-    private boolean isLeftLesser(T key1, T key2) {
-        return key1.compareTo(key2) < 0;
-    }
-
-    private boolean isLeftGreater(T key1, T key2) {
-        return key1.compareTo(key2) > 0;
-    }
 
     {
         Childes = new ArrayList<Node<T>>();

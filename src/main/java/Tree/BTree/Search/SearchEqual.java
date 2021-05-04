@@ -1,4 +1,4 @@
-package Search;
+package Tree.BTree.Search;
 
 import Tree.BTree.NodeChecker;
 
@@ -13,12 +13,13 @@ public class SearchEqual<T extends Comparable<T>> extends NodeChecker<T> {
     //если искомое значение меньше ключа значит оно находится внутри этого потомка
     @Override
     public boolean isNeedToCheckChild(T key) {
-        return Val.compareTo(key) < 0;
+        return Val.compareTo(key) <= 0;
     }
 
     @Override
-    public boolean isNeedToStop() {
-        return true;
+    public boolean isNeedToStop(T key) {
+        return Val.compareTo(key)<=0;
+
     }
 
     public SearchEqual(T val){

@@ -1,6 +1,6 @@
 package Tree.BTree;
 
-
+import Tree.BTree.Search.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,17 +10,32 @@ import java.util.function.Consumer;
 
 public class BTree<T extends Comparable<T>> implements Iterable {
     int Rank;
+    int Size=0;
     Node<T> Root;
 
-    public void insert(T value) {
-        if (this.isEmpty()) Root = new Node<T>(Rank);
-        insertIfLeaf(Root, value);
-    }
 
     public void insertRange(Collection<T> range) {
-        if (this.isEmpty()) Root = new Node<T>(Rank);
-        for (T val : range)
-            insertIfLeaf(Root, val);
+        for (T val : range) {
+            insert(val);
+        }
+    }
+
+    public void insert(T value) {
+        insertIfLeaf(Root, value);
+        Size++;
+    }
+
+    void insertIfLeaf(Node<T> node, T val) {
+        if (node.isLeaf)
+            node.insertKey(val);
+        else {
+            selectLeaf(node, val);
+        }
+    }
+
+    void selectLeaf(Node<T> node, T val) {
+        Node<T> child = node.getChildByKey(val);
+        insertIfLeaf(child, val);
     }
 
 
@@ -29,9 +44,7 @@ public class BTree<T extends Comparable<T>> implements Iterable {
     }
 
 
-    public boolean delete(T key) {
-        return false;
-    }
+
 
     public void construct(Path filePath, Class<T> tClass) throws IOException {
 
@@ -53,30 +66,33 @@ public class BTree<T extends Comparable<T>> implements Iterable {
 
 
     public Collection<T> findEqual(T val) {
-
-        NodeChecker<T> Checker = new Search.SearchEqual<T>(val);
-
+        NodeChecker<T> Checker = new SearchEqual<T>(val);
+        return Checker.DoSearch(this.Root);
+    }
+    public Collection<T> findLess(T minVal) {
+        NodeChecker<T> Checker = new SearchLess<T>(minVal);
+        return Checker.DoSearch(this.Root);
+    }
+    public Collection<T> findGreater(T maxVal) {
+        NodeChecker<T> Checker = new SearchGreater<T>(maxVal);
+        return Checker.DoSearch(this.Root);
+    }
+    public Collection<T> findInRange(T minVal, T maxVal) {
+        NodeChecker<T> Checker = new SearchInRange<T>(minVal,maxVal);
         return Checker.DoSearch(this.Root);
     }
 
-    void insertIfLeaf(Node<T> node, T val) {
-        if (node.isLeaf)
-            node.insertKey(val);
-        else {
-            findLeaf(node, val);
-        }
 
-
+    public void deleteRange(Collection<T> range) {
+        for (T val : range)
+            insert( val);
     }
-
-    void findLeaf(Node<T> node, T val) {
-        Node<T> child = node.getChildByKey(val);
-        insertIfLeaf(child, val);
+    public void delete(T key) {
     }
-
 
     BTree(int rank) {
         this.Rank = rank;
+        Root = new Node<T>(Rank);
     }
 
 

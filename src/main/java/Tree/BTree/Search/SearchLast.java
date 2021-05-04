@@ -16,7 +16,8 @@ public class SearchLast extends NodeChecker {
     }
 
     @Override
-    public boolean isNeedToStop() {
+    public boolean isNeedToStop(Comparable key) {
         return false;
     }
+
 }
