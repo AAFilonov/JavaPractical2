@@ -636,6 +636,82 @@ class BTreeTest {
             }
 
         }
+        @Nested
+        class FindMinMaxTests {
+            @Nested
+            class FindMinTests {
+                @Test
+                void given_WhenTreeIs1to3_ThenReturn1() {
+                    List<Integer> range = Arrays.asList(1, 2, 3);
+                    tree.insertRange(range);
+
+                    Integer actualVal =  tree.findMin();
+
+
+                    assertEquals(1, actualVal);
+                }
+
+                @Test
+                void given_WhenTreeIs11to778_ThenReturn1() {
+                    tree.insertRange(Arrays.asList(1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8));
+                    Integer actualVal =  tree.findMin();
+                    assertEquals(1, actualVal);
+                }
+
+                @Test
+                void given_WhenTreeIs11to77BackWards_ThenReturn1() {
+                    tree.insertRange(Arrays.asList(8, 7, 7, 6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1));
+                    Integer actualVal =  tree.findMin();
+                    assertEquals(1, actualVal);
+                }
+
+                @Test
+                void given_WhenTreeIs11to77RandomOrder_ThenReturn1() {
+                    tree.insertRange(Arrays.asList(5, 7, 3, 1, 2, 6, 4, 8, 7, 1, 6, 4, 2, 5, 3));
+                    Integer actualVal =  tree.findMin();
+                    assertEquals(1, actualVal);
+                }
+
+
+            }
+            @Nested
+            class FindMaxTests {
+                @Test
+                void given_WhenTreeIs1to3_ThenReturn1() {
+                    List<Integer> range = Arrays.asList(1, 2, 3);
+                    tree.insertRange(range);
+
+                    Integer actualVal =  tree.findMax();
+
+
+                    assertEquals(3, actualVal);
+                }
+
+                @Test
+                void given_WhenTreeIs11to778_ThenReturn8() {
+                    tree.insertRange(Arrays.asList(1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8));
+                    Integer actualVal =  tree.findMax();
+                    assertEquals(8, actualVal);
+                }
+
+                @Test
+                void given_WhenTreeIs11to77BackWards_ThenReturn8() {
+                    tree.insertRange(Arrays.asList(8, 7, 7, 6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1));
+                    Integer actualVal =  tree.findMax();
+                    assertEquals(8, actualVal);
+                }
+
+                @Test
+                void given_WhenTreeIs11to77RandomOrder_ThenReturn8() {
+                    tree.insertRange(Arrays.asList(5, 7, 3, 1, 2, 6, 4, 8, 7, 1, 6, 4, 2, 5, 3));
+                    Integer actualVal =  tree.findMax();
+                    assertEquals(8, actualVal);
+                }
+
+
+            }
+
+        }
     }
 
     @Nested

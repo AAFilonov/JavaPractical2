@@ -81,7 +81,20 @@ public class BTree<T extends Comparable<T>> implements Iterable {
         NodeChecker<T> Checker = new SearchInRange<T>(minVal,maxVal);
         return Checker.DoSearch(this.Root);
     }
+    public T findMin() {
+        Node<T> current = Root;
+        while (!current.isLeaf)
+            current =current.getFirstChild();
+        return current.getFirstKey();
 
+    }
+    public T findMax() {
+        Node<T> current = Root;
+        while (!current.isLeaf)
+            current =current.getLastChild();
+        return current.getLastKey();
+
+    }
 
     public void deleteRange(Collection<T> range) {
         for (T val : range)
