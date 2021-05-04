@@ -96,6 +96,21 @@ public class BTree<T extends Comparable<T>> implements Iterable {
 
     }
 
+     Node<T> findMinNode() {
+        Node<T> current = Root;
+        while (!current.isLeaf)
+            current =current.getFirstChild();
+        return current;
+
+    }
+    Node<T> findMaxNode() {
+        Node<T> current = Root;
+        while (!current.isLeaf)
+            current =current.getLastChild();
+        return current;
+
+    }
+
     public void deleteRange(Collection<T> range) {
         for (T val : range)
             insert( val);
@@ -110,7 +125,7 @@ public class BTree<T extends Comparable<T>> implements Iterable {
 
 
     @Override
-    public Iterator iterator() {
+    public Iterator<T> iterator() {
         return null;
     }
 
