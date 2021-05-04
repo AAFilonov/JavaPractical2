@@ -4,62 +4,112 @@ import java.util.function.Consumer;
 
 public class Iterator<T extends Comparable<T>> implements java.util.Iterator<T> {
     private BTree<T> Tree;
-    private  Node<T> CurrentNode;
-    private  int CurrentKeyIndex;
+    private Node<T> CurrentNode;
+    private int CurrentKeyIndex;
     T CurrentKey;
 
-    Iterator(BTree<T> tree)
-    {
+    Iterator(BTree<T> tree) {
         this.Tree = tree;
-        this.CurrentNode= tree.findMinNode();
-        if(CurrentNode.getFirstKey()!=null) this.CurrentKeyIndex = -1;
+        this.CurrentNode = tree.findMinNode();
+        this.CurrentKeyIndex = -1;
 
-    }
-
-    @Override
-    public boolean hasNext() {
-        return CurrentKey ==Tree.findMax();
-    }
-
-    int getThisChildIndex(){
-        T PrimeKeyOfNode = CurrentNode.getLastKey();
-        for (int i = 0; i< CurrentNode.Parent.Keys.size();i++){
-            T key = CurrentNode.Parent.Keys.get(i);
-            if(PrimeKeyOfNode.compareTo(key) <=0)
-                return i;
-        }
-        //последний
-        return CurrentNode.Parent.Childes.size()-1;
-
-    }
-    T getCurrentKey(){
-        return CurrentNode.Keys.get(CurrentKeyIndex);
-    }
-
-
-    @Override
-    public T next() {
-        if(hasNext()){
-            if(CurrentKeyIndex< CurrentNode.Keys.size()) {
-                CurrentKeyIndex++;
-                return getCurrentKey();
-            }
-
-
-        }
-        return null;
     }
 
     @Override
     public void remove() {
-
+        Tree.delete(CurrentKey);
     }
 
     @Override
     public void forEachRemaining(Consumer action) {
 
     }
-    // constructor
+    
+    @Override
+    public boolean hasNext() {
+        if (!Tree.isEmpty())
+            return CurrentKey != Tree.findMax();
+        else return false;
+    }
+
+    int getThisChildIndex() {
+        T PrimeKeyOfNode = CurrentNode.getLastKey();
+        for (int i = 0; i < CurrentNode.Parent.Keys.size(); i++) {
+            T key = CurrentNode.Parent.Keys.get(i);
+            if (PrimeKeyOfNode.compareTo(key) <= 0)
+                return i;
+        }
+        //последний
+        return CurrentNode.Parent.Childes.size() - 1;
+
+    }
+
+
+    @Override
+    public T next() {
+        if (hasNext()) {
+            if (CurrentNode.isLeaf) {
+                return moveRight();
+            }       //идем в родителя и его ключ, или мб его следующего потомка
+            else return moveDown();
+        }
+        return null;
+    }
+
+    private T moveRight() {
+        if (!isLastKeyInNode()) {
+            return nextKeyInCurrentNode();
+        } else
+            return moveUp();
+
+    }
+
+    private T moveUp() {
+        int passedChildIndex = getThisChildIndex();
+        moveToParent();
+        if (isLastChildInNode(passedChildIndex))
+            return moveUp();
+        else {
+            CurrentKeyIndex = passedChildIndex;
+            CurrentKey = CurrentNode.Keys.get(CurrentKeyIndex);
+            return CurrentKey;
+        }
+    }
+
+    private T moveDown() {
+
+        moveToNextChild();
+        CurrentKeyIndex = -1;
+        if (!CurrentNode.isLeaf)
+            return moveDown();
+        else return moveRight();
+    }
+
+    private void moveToNextChild() {
+        CurrentNode = CurrentNode.Childes.get(CurrentKeyIndex + 1);
+    }
+
+    private void moveToParent() {
+        CurrentNode = CurrentNode.Parent;
+    }
+
+
+    private T nextKeyInCurrentNode() {
+        CurrentKeyIndex++;
+        CurrentKey = CurrentNode.Keys.get(CurrentKeyIndex);
+        return CurrentKey;
+    }
+
+    private boolean isLastKeyInNode() {
+        return CurrentKeyIndex == CurrentNode.Keys.size() - 1;
+    }
+
+    private boolean isLastChildInNode(int childIndex) {
+        return childIndex == CurrentNode.Childes.size() - 1;
+    }
+
+
+
 
 }
 

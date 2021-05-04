@@ -40,7 +40,7 @@ public class BTree<T extends Comparable<T>> implements Iterable {
 
 
     public boolean isEmpty() {
-        return this.Root == null;
+        return this.Root.Keys.size() == 0;
     }
 
 
@@ -126,7 +126,7 @@ public class BTree<T extends Comparable<T>> implements Iterable {
 
     @Override
     public Iterator<T> iterator() {
-        return null;
+        return new Iterator<T>(this);
     }
 
     @Override

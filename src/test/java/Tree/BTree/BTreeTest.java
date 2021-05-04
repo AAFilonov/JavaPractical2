@@ -1108,64 +1108,174 @@ class BTreeTest {
 
     @Nested
     class iteratorTests {
+        @Nested
+        class HasNextTests {
+            @Test
+            void givenNullPosIterator_WhenTreeIsEmpty_ThenHasNextReturnFalse() {
+                Iterator<Integer> it = tree.iterator();
+                assertEquals(false, it.hasNext());
+            }
+            @Test
+            void givenNullPosIterator_WhenTreeIsNotEmpty_ThenHasNextReturnTrue() {
 
-        @Test
-        void givenNullPosIterator_WhenTreeIsEmpty_ThenHasNextReturnFalse() {
-            Iterator<Integer> it = tree.iterator()
-                    ;
-            assertEquals(false, it.hasNext());
-        }
-        @Test
-        void givenNullPosIterator_WhenTreeIsNotEmpty_ThenHasNextReturnTrue() {
+                tree.insertRange(Arrays.asList(1,2,3));
 
-            tree.insertRange(Arrays.asList(1,2,3));
+                Iterator<Integer> it = tree.iterator();
+                boolean actualVal =it.hasNext();
+                assertEquals(true,actualVal );
+            }
+            @Test
+            void givenLastPosIterator_WhenTreeIsNotEmpty_ThenHasNextReturnFalse() {
+                tree.insertRange(Arrays.asList(1,2,3));
 
-            Iterator<Integer> it = tree.iterator();
+                Iterator<Integer> it = tree.iterator();
+                it.next();
+                it.next();
+                it.next();
 
-            assertEquals(true, it.hasNext());
-        }
-        @Test
-        void givenLastPosIterator_WhenTreeIsNotEmpty_ThenHasNextReturnFalse() {
-            tree.insertRange(Arrays.asList(1,2,3));
-
-            Iterator<Integer> it = tree.iterator();
-            it.next();
-            it.next();
-            it.next();
-
-            assertEquals(false, it.hasNext());
-        }
-
-        @Test
-        void givenNullPosIterator_WhenTreeIs123_ThenNextReturnFirstVal() {
-            tree.insertRange(Arrays.asList(1,2,3));
-
-            Iterator<Integer> it = tree.iterator();
-            Integer val1 = it.next();
-
-            assertAll(
-                    () -> assertEquals((Integer) 1, val1)
-            );
-
-        }
-        @Test
-        void givenNullPosIterator_WhenTreeIs123_ThenNextReturn1to3() {
-            tree.insertRange(Arrays.asList(1,2,3));
-
-            Iterator<Integer> it = tree.iterator();
-            Integer val1 = it.next();
-            Integer val2 = it.next();
-            Integer val3 = it.next();
-            assertAll(
-
-                    () -> assertEquals((Integer) 1, val1),
-                    () -> assertEquals((Integer) 2, val2),
-                    () -> assertEquals((Integer) 3, val3)
-            );
+                assertEquals(false, it.hasNext());
+            }
         }
 
+        @Nested
+        class NextTests {
+            @Test
+            void givenNullPosIterator_WhenTreeIsOneNode_ThenNextReturnFirstVal() {
+                tree.insertRange(Arrays.asList(1, 2));
+
+                Iterator<Integer> it = tree.iterator();
+                Integer val1 = it.next();
+
+                assertAll(
+                        () -> assertEquals((Integer) 1, val1)
+                );
+
+            }
+            @Test
+            void givenNullPosIterator_WhenTreeIsOneNode_ThenNext2ReturnSecondtVal() {
+                tree.insertRange(Arrays.asList(1, 2));
+
+                Iterator<Integer> it = tree.iterator();
+                it.next();
+                Integer val = it.next();
+
+                assertAll(
+                        () -> assertEquals((Integer) 2, val)
+                );
+
+            }
+
+            @Test
+            void givenNullPosIterator_WhenTreeIs123_ThenNextReturnFirstVal() {
+                tree.insertRange(Arrays.asList(1, 2, 3));
+
+                Iterator<Integer> it = tree.iterator();
+                Integer val1 = it.next();
+
+                assertAll(
+                        () -> assertEquals((Integer) 1, val1)
+                );
+
+            }
+
+            @Test
+            void givenNullPosIterator_WhenTreeIs123_ThenNextReturn1to3() {
+                tree.insertRange(Arrays.asList(1, 2, 3));
+
+                Iterator<Integer> it = tree.iterator();
+                Integer val1 = it.next();
+                Integer val2 = it.next();
+                Integer val3 = it.next();
+                assertAll(
+
+                        () -> assertEquals((Integer) 1, val1),
+                        () -> assertEquals((Integer) 2, val2),
+                        () -> assertEquals((Integer) 3, val3)
+                );
+            }
+            @Test
+            void givenNullPosIterator_WhenTreeIs12345_ThenNextReturn1to5() {
+                tree.insertRange(Arrays.asList(1, 2, 3,4,5));
+
+                Iterator<Integer> it = tree.iterator();
+                Integer val1 = it.next();
+                Integer val2 = it.next();
+                Integer val3 = it.next();
+                Integer val4 = it.next();
+                Integer val5 = it.next();
+                assertAll(
+
+                        () -> assertEquals((Integer) 1, val1),
+                        () -> assertEquals((Integer) 2, val2),
+                        () -> assertEquals((Integer) 3, val3),
+                        () -> assertEquals((Integer) 4, val4),
+                        () -> assertEquals((Integer) 5, val5)
+                );
+            }
+            //TODO тест для длинного набора - делает N некстов, последний должен вернуть N-нный элемент
+
+            @ParameterizedTest
+            @ValueSource(ints = {1, 2, 3, 4, 5, 6, 7})
+            void givenNullPointIterator_WhenTree1to7_ThenFindReturnThisValue(Integer Val) {
+                List<Integer> range = Arrays.asList(1, 2, 3, 4, 5, 6, 7);
+                tree.insertRange(range);
+                Iterator<Integer> it =  tree.iterator();
+
+                Integer lastVal=null;
+                for (int i =0;i<Val;i++){
+                    lastVal = it.next();
+                }
+
+                assertEquals(Val, lastVal);
+            }
 
 
+            @ParameterizedTest
+            @ValueSource(ints = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18})
+            void givenNullPointIterator_WhenTree1to18_ThenFindReturnThisValue(Integer Val) {
+                List<Integer> range = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18);
+                tree.insertRange(range);
+                Iterator<Integer> it =  tree.iterator();
+
+                Integer lastVal=null;
+                for (int i =0;i<Val;i++){
+                    lastVal = it.next();
+                }
+
+                assertEquals(Val, lastVal);
+            }
+
+            @ParameterizedTest
+            @ValueSource(ints = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18})
+            void givenNullPointIterator_WhenTree1to18InsertedBackwards_ThenFindReturnThisValue(Integer Val) {
+                List<Integer> range = Arrays.asList(18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1);
+                tree.insertRange(range);
+                Iterator<Integer> it =  tree.iterator();
+
+                Integer lastVal=null;
+                for (int i =0;i<Val;i++){
+                    lastVal = it.next();
+                }
+
+                assertEquals(Val, lastVal);
+            }
+
+
+            @ParameterizedTest
+            @ValueSource(ints = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18})
+            void givenNullPointIterator_WhenTree1to18InsertedRandomly_ThenFindReturnThisValue(Integer Val) {
+                List<Integer> range = Arrays.asList(6, 5, 15, 7, 16, 4, 18, 2, 14, 9, 13, 17, 1, 12, 8, 10, 3, 11);
+                tree.insertRange(range);
+                Iterator<Integer> it =  tree.iterator();
+
+                Integer lastVal=null;
+                for (int i =0;i<Val;i++){
+                    lastVal = it.next();
+                }
+
+                assertEquals(Val, lastVal);
+            }
+        }
 
 
     }
