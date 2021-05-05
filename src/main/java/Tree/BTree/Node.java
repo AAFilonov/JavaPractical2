@@ -234,5 +234,14 @@ public class Node<T extends Comparable<T>> {
     public int getFirstChildIndex(){
         return  0;
     }
+    public int getIndexByKey(T val){
+        ArrayList<T> keys = this.Keys;
+        for (int i = 0; i < keys.size(); i++) {
+            T key = keys.get(i);
+            if (key.compareTo(val) == 0)
+                return i;
+        }
+        return  -1;
+    }
 
 }

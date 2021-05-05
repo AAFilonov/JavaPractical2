@@ -13,6 +13,9 @@ public class BTree<T extends Comparable<T>> implements Iterable<T> {
     int Size = 0;
     Node<T> Root;
 
+    public int size(){
+        return Size;
+    }
 
     public void insertRange(Collection<T> range) {
         for (T val : range) {
@@ -124,6 +127,7 @@ public class BTree<T extends Comparable<T>> implements Iterable<T> {
 
         DeleteFirstEqual<T> Checker = new DeleteFirstEqual<T>(this  );
         Checker.doDelete(key);
+        Size--;
 
     }
 

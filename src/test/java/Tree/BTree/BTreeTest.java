@@ -155,55 +155,88 @@ class BTreeTest {
                 }
 
             }
+
+            @Nested
+            class DeleteFromLeafWithOrderViolationTests {
+
+
+                @Test
+                void givenLeafKey_WhenReplaceFromLeft_ThenBeOk() {
+                    List<Integer> range = Arrays.asList(0, 10, 20, 5, 15, 8, 4);
+                    tree.insertRange(range);
+                    tree.delete(8);
+                }
+
+                @Test
+                void givenLeafKey_WhenReplaceFromRight_ThenBeOk() {
+                    List<Integer> range = Arrays.asList(0, 10, 20, 5, 15, 8);
+                    tree.insertRange(range);
+                    tree.delete(8);
+                }
+
+                @Test
+                void givenLeftLeafKey_WhenTreeIs12345_ThenBeOk() {
+                    List<Integer> range = Arrays.asList(1, 2, 3, 4, 5);
+                    tree.insertRange(range);
+                    tree.delete(1);
+
+                }
+
+                @Test
+                void givenMiddleLeafKey_WhenTreeIs12345_ThenBeOk() {
+                    List<Integer> range = Arrays.asList(1, 2, 3, 4, 5);
+                    tree.insertRange(range);
+                    tree.delete(3);
+
+                }
+
+                @Test
+                void givenRightLeafKey_WhenTreeIs12345_ThenBeOk() {
+                    List<Integer> range = Arrays.asList(1, 2, 3, 4, 5);
+                    tree.insertRange(range);
+                    tree.delete(5);
+
+                }
+            }
         }
 
-        @Test
-        void givenLeafKey_WhenReplaceFromLeft_ThenBeOk() {
-            List<Integer> range = Arrays.asList(0, 10, 20, 5, 15, 8, 4);
-            tree.insertRange(range);
-            tree.delete(8);
+        @Nested
+        class DeleteFromNodeTests {
+            @Test
+            void givenNodeLeftKey_WhenHZ_ThenBeOk() {
+                List<Integer> range = Arrays.asList(0, 10, 20, 5, 15, 8, 12);
+                tree.insertRange(range);
+                tree.delete(5);
+
+            }
+
+            @Test
+            void givenNodeRightKey_WhenHZ_ThenBeOk() {
+                List<Integer> range = Arrays.asList(0, 10, 20, 5, 15, 8, 12);
+                tree.insertRange(range);
+                tree.delete(15);
+
+            }
+
+            @Test
+            void givenNodeRightKey_WhenTreeIs12345_ThenBeOk() {
+                List<Integer> range = Arrays.asList(1,2,3,4,5);
+                tree.insertRange(range);
+                tree.delete(4);
+
+            }
+            @Test
+            void givenNodeLeftKey_WhenTreeIs12345_ThenBeOk() {
+                List<Integer> range = Arrays.asList(1,2,3,4,5);
+                tree.insertRange(range);
+                tree.delete(2);
+
+            }
+
+
         }
 
-        @Test
-        void givenLeafKey_WhenReplaceFromRight_ThenBeOk() {
-            List<Integer> range = Arrays.asList(0, 10, 20, 5, 15, 8);
-            tree.insertRange(range);
-            tree.delete(8);
-        }
-
-        @Test
-        void givenLeftLeafKey_WhenTreeIs12345_ThenBeOk() {
-            List<Integer> range = Arrays.asList(1, 2, 3, 4, 5);
-            tree.insertRange(range);
-            tree.delete(1);
-
-        }
-
-        @Test
-        void givenMiddleLeafKey_WhenTreeIs12345_ThenBeOk() {
-            List<Integer> range = Arrays.asList(1, 2, 3, 4, 5);
-            tree.insertRange(range);
-            tree.delete(3);
-
-        }
-
-        @Test
-        void givenRightLeafKey_WhenTreeIs12345_ThenBeOk() {
-            List<Integer> range = Arrays.asList(1, 2, 3, 4, 5);
-            tree.insertRange(range);
-            tree.delete(5);
-
-        }
-
-
-        @Test
-        void givenLeafKey_WhenMergeLeft_ThenBeOk() {
-            List<Integer> range = Arrays.asList(0, 10, 20, 5, 15, 8, 12);
-            tree.insertRange(range);
-
-        }
     }
-
 
     @Nested
     class FindTests {
