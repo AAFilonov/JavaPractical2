@@ -228,5 +228,11 @@ public class Node<T extends Comparable<T>> {
         this.Parent = parent;
     }
 
+    public int getLastChildIndex(){
+        return  this.Childes.size() - 1;
+    }
+    public int getFirstChildIndex(){
+        return  0;
+    }
 
 }

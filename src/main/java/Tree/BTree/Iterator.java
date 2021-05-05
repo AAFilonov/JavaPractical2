@@ -106,9 +106,15 @@ public class Iterator<T extends Comparable<T>> implements java.util.Iterator<T> 
         return CurrentKeyIndex == CurrentNode.Keys.size() - 1;
     }
 
-     boolean isLastChildInNode(int childIndex) {
-        return childIndex == CurrentNode.Childes.size() - 1;
+    boolean isLastChildInNode(int childIndex) {
+        return childIndex == CurrentNode.getLastChildIndex();
     }
+
+
+
+
+
+
 
 
 

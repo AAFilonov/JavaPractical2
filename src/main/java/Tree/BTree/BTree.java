@@ -1,7 +1,6 @@
 package Tree.BTree;
 
 import Tree.BTree.Search.*;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -123,7 +122,7 @@ public class BTree<T extends Comparable<T>> implements Iterable<T> {
 
     public void delete(T key) {
 
-        DeleteEqual<T> Checker = new DeleteEqual<T>();
+        DeleteFirstEqual<T> Checker = new DeleteFirstEqual<T>(this  );
         Checker.doDelete(key);
 
     }
@@ -149,111 +148,6 @@ public class BTree<T extends Comparable<T>> implements Iterable<T> {
         return null;
     }
 
-    class DeleteEqual<T extends Comparable<T>> {
-        T Val;
-        Iterator<T> it;
-
-        void doDelete(T val) {
-            this.Val = val;
-            this.it = (Iterator<T>) iterator();
-
-
-            while (it.hasNext()) {
-                T key = it.next();
-                if (key.compareTo(val) == 0) {
-                    this.deleteKey();
-                    return;
-                }
-            }
-        }
-
-        private void deleteKey() {
-            if (it.CurrentNode.isLeaf)
-                deleteKeyFromLeaf();
-            else
-                deleteKeyDromNode();
-        }
-
-        private void deleteKeyFromLeaf() {
-            if (!doesDeleteViolateOrder(it.CurrentNode)) {
-                it.CurrentNode.Keys.remove(Val);
-                return;
-            }
-            int thisNodeIndex = it.getThisChildIndex();
-            if (thisNodeIndex == 0) {
-
-                Node<T> leftSibling = it.CurrentNode.Parent.Childes.get(thisNodeIndex + 1);
-                mergeRightWithParentkey(thisNodeIndex, leftSibling);
-
-            } else if (thisNodeIndex == it.CurrentNode.Parent.Childes.size() - 1) {
-                Node<T> rightSibling = it.CurrentNode.Parent.Childes.get(thisNodeIndex - 1);
-                mergeLeftwithParentkey(thisNodeIndex, rightSibling);
-
-            } else {
-                Node<T> leftSibling = it.CurrentNode.Parent.Childes.get(thisNodeIndex - 1);
-                Node<T> rightSibling = it.CurrentNode.Parent.Childes.get(thisNodeIndex + 1);
-
-                if (!doesDeleteViolateOrder(leftSibling)) {
-                    replaceWithLeft(thisNodeIndex, leftSibling);
-                } else if (!doesDeleteViolateOrder(rightSibling)) {
-                    replaceWithRight(thisNodeIndex, rightSibling);
-                } else mergeLeftwithParentkey(thisNodeIndex, leftSibling);
-            }
-        }
-
-        private void mergeRightWithParentkey(int thisNodeIndex, Node<T> rightSibling) {
-            it.CurrentNode.Keys.remove(Val);
-            it.CurrentNode = it.CurrentNode.Parent;
-            it.CurrentNode.Childes.remove(thisNodeIndex);
-
-            T keyToMerge = it.CurrentNode.Keys.get(thisNodeIndex );
-            rightSibling.insertKey(keyToMerge);
-            it.CurrentNode.Keys.remove(keyToMerge);
-
-        }
-
-        private void mergeLeftwithParentkey(int thisNodeIndex, Node<T> leftSibling) {
-            it.CurrentNode.Keys.remove(Val);
-            it.CurrentNode = it.CurrentNode.Parent;
-            it.CurrentNode.Childes.remove(thisNodeIndex);
-
-            T keyToMerge = it.CurrentNode.Keys.get(thisNodeIndex - 1);
-            leftSibling.insertKey(keyToMerge);
-            it.CurrentNode.Keys.remove(keyToMerge);
-
-        }
-
-        private void replaceWithRight(int thisNodeIndex, Node<T> rightSibling) {
-            it.CurrentNode.Keys.remove(Val);
-            it.CurrentNode.insertKey(it.CurrentNode.Parent.Keys.get(thisNodeIndex));
-
-            T newKey = rightSibling.getFirstKey();
-            rightSibling.Keys.remove(newKey);
-
-            it.CurrentNode.Parent.Keys.set(thisNodeIndex, newKey);
-
-        }
-
-        private void replaceWithLeft(int thisNodeIndex, Node<T> leftSibling) {
-            it.CurrentNode.Keys.remove(Val);
-            it.CurrentNode.insertKey(it.CurrentNode.Parent.Keys.get(thisNodeIndex - 1));
-
-            T newKey = leftSibling.getLastKey();
-            leftSibling.Keys.remove(newKey);
-            it.CurrentNode.Parent.Keys.set(thisNodeIndex - 1, newKey);
-        }
-
-
-        boolean doesDeleteViolateOrder(Node<T> node) {
-            return node.Keys.size() - 1 < node.MaxDegree / 2;
-        }
-
-        private void deleteKeyDromNode() {
-            throw new NotImplementedException();
-        }
-
-
-    }
 
 
 }
