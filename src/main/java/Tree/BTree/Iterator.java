@@ -4,8 +4,8 @@ import java.util.function.Consumer;
 
 public class Iterator<T extends Comparable<T>> implements java.util.Iterator<T> {
     private BTree<T> Tree;
-    private Node<T> CurrentNode;
-    private int CurrentKeyIndex;
+    Node<T> CurrentNode;
+    int CurrentKeyIndex;
     T CurrentKey;
 
     Iterator(BTree<T> tree) {
@@ -22,7 +22,8 @@ public class Iterator<T extends Comparable<T>> implements java.util.Iterator<T> 
 
     @Override
     public void forEachRemaining(Consumer action) {
-
+        while (hasNext())
+            action.accept(next());
     }
     
     @Override
@@ -56,7 +57,7 @@ public class Iterator<T extends Comparable<T>> implements java.util.Iterator<T> 
         return null;
     }
 
-    private T moveRight() {
+     T moveRight() {
         if (!isLastKeyInNode()) {
             return nextKeyInCurrentNode();
         } else
@@ -64,7 +65,8 @@ public class Iterator<T extends Comparable<T>> implements java.util.Iterator<T> 
 
     }
 
-    private T moveUp() {
+
+     T moveUp() {
         int passedChildIndex = getThisChildIndex();
         moveToParent();
         if (isLastChildInNode(passedChildIndex))
@@ -76,7 +78,7 @@ public class Iterator<T extends Comparable<T>> implements java.util.Iterator<T> 
         }
     }
 
-    private T moveDown() {
+     T moveDown() {
 
         moveToNextChild();
         CurrentKeyIndex = -1;
@@ -85,26 +87,26 @@ public class Iterator<T extends Comparable<T>> implements java.util.Iterator<T> 
         else return moveRight();
     }
 
-    private void moveToNextChild() {
+     void moveToNextChild() {
         CurrentNode = CurrentNode.Childes.get(CurrentKeyIndex + 1);
     }
 
-    private void moveToParent() {
+     void moveToParent() {
         CurrentNode = CurrentNode.Parent;
     }
 
 
-    private T nextKeyInCurrentNode() {
+     T nextKeyInCurrentNode() {
         CurrentKeyIndex++;
         CurrentKey = CurrentNode.Keys.get(CurrentKeyIndex);
         return CurrentKey;
     }
 
-    private boolean isLastKeyInNode() {
+     boolean isLastKeyInNode() {
         return CurrentKeyIndex == CurrentNode.Keys.size() - 1;
     }
 
-    private boolean isLastChildInNode(int childIndex) {
+     boolean isLastChildInNode(int childIndex) {
         return childIndex == CurrentNode.Childes.size() - 1;
     }
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Node<T extends Comparable<T>> {
-    int Rank;
+    int MaxDegree;
     boolean isLeaf = true;
     ArrayList<Node<T>> Childes;
     ArrayList<T> Keys;
@@ -37,7 +37,7 @@ public class Node<T extends Comparable<T>> {
         Keys.add(val);
         Collections.sort(Keys);
 
-        if (Keys.size() == this.Rank) {
+        if (Keys.size() == this.MaxDegree) {
             splitNode();
 
         }
@@ -82,7 +82,7 @@ public class Node<T extends Comparable<T>> {
         );
     }
     T getMiddleKey() {
-        return Keys.get(this.Rank / 2);
+        return Keys.get(this.MaxDegree / 2);
     }
 
 
@@ -139,8 +139,8 @@ public class Node<T extends Comparable<T>> {
     }
 
     public Node<T> initRightkeys(Node<T> parent) {
-        Node<T> ChildRight = new Node<T>(Rank, parent);
-        int middleValIndex = this.Rank / 2;
+        Node<T> ChildRight = new Node<T>(MaxDegree, parent);
+        int middleValIndex = this.MaxDegree / 2;
         for (int i = middleValIndex + 1; i < Keys.size(); i++) {
             ChildRight.insertKey(Keys.get(i));
 
@@ -149,8 +149,8 @@ public class Node<T extends Comparable<T>> {
     }
 
     public Node<T> initLeftKeys(Node<T> parent) {
-        Node<T> LeftChild = new Node<T>(Rank, parent);
-        for (int i = 0; i < this.Rank / 2; i++)
+        Node<T> LeftChild = new Node<T>(MaxDegree, parent);
+        for (int i = 0; i < this.MaxDegree / 2; i++)
             LeftChild.insertKey(Keys.get(i));
         return LeftChild;
     }
@@ -219,12 +219,12 @@ public class Node<T extends Comparable<T>> {
         Keys = new ArrayList<T>();
     }
 
-    Node(int rank) {
-        this.Rank = rank;
+    Node(int maxDegree) {
+        this.MaxDegree = maxDegree;
     }
 
-    Node(int rank, Node<T> parent) {
-        this.Rank = rank;
+    Node(int maxDegree, Node<T> parent) {
+        this.MaxDegree = maxDegree;
         this.Parent = parent;
     }
 

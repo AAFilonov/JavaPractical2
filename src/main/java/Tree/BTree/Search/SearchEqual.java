@@ -1,10 +1,11 @@
 package Tree.BTree.Search;
 
+import Tree.BTree.Node;
 import Tree.BTree.NodeChecker;
 
 
-public class SearchEqual<T extends Comparable<T>> extends NodeChecker<T> {
-    T Val;
+public  class SearchEqual<T extends Comparable<T>> extends NodeChecker<T> {
+    protected T Val;
     @Override
     public boolean isKeyRequired(T key) {
         return Val.compareTo(key) == 0;
@@ -26,4 +27,5 @@ public class SearchEqual<T extends Comparable<T>> extends NodeChecker<T> {
         super();
         this.Val = val;
     }
+
 }

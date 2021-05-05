@@ -1,5 +1,6 @@
 package Tree.BTree;
 
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -99,8 +100,110 @@ class BTreeTest {
 
     @Nested
     class DeleteTests {
+        @Nested
+        class DeleteFromLeafTests {
+            @Nested
+            class DeleteFromLeafWithoutOrderViolationTests {
+                @Test
+                void givenLastLeafKey_WhenDeleteMFromMiddleLeaf_ThenBeOk() {
+                    List<Integer> range = Arrays.asList(0, 10, 20, 5, 15, 8, 4, 9);
+                    tree.insertRange(range);
+                    tree.delete(9);
 
+
+                }
+
+                @Test
+                void givenLastLeafKey_WhenDeleteFromLeftLeafDoes_ThenBeOk() {
+                    List<Integer> range = Arrays.asList(0, 10, 20, 5, 15, 8, 4, 9);
+                    tree.insertRange(range);
+
+                    tree.delete(4);
+                }
+
+                @Test
+                void givenLastLeafKey_WhenDeletFromRightLeaf_ThenBeOk() {
+                    List<Integer> range = Arrays.asList(0, 10, 20, 5, 15, 8, 4, 9);
+                    tree.insertRange(range);
+
+                    tree.delete(20);
+                }
+
+                @Test
+                void givenFirstLeafKey_WhenDeleteMFromiddleLeaf_ThenBeOk() {
+                    List<Integer> range = Arrays.asList(0, 10, 20, 5, 15, 8, 4, 9);
+                    tree.insertRange(range);
+                    tree.delete(0);
+
+
+                }
+
+                @Test
+                void givenFirstLeafKey_WhenDeletFromLeftLeafDoesNotViolateOrder_ThenBeOk() {
+                    List<Integer> range = Arrays.asList(0, 10, 20, 5, 15, 8, 4, 9);
+                    tree.insertRange(range);
+
+                    tree.delete(4);
+                }
+
+                @Test
+                void givenFirstLeafKey_WhenDeletFromRightLeafDoesNotViolateOrder_ThenBeOk() {
+                    List<Integer> range = Arrays.asList(0, 10, 20, 5, 15, 8, 4, 9);
+                    tree.insertRange(range);
+
+                    tree.delete(15);
+                }
+
+            }
+        }
+
+        @Test
+        void givenLeafKey_WhenReplaceFromLeft_ThenBeOk() {
+            List<Integer> range = Arrays.asList(0, 10, 20, 5, 15, 8, 4);
+            tree.insertRange(range);
+            tree.delete(8);
+        }
+
+        @Test
+        void givenLeafKey_WhenReplaceFromRight_ThenBeOk() {
+            List<Integer> range = Arrays.asList(0, 10, 20, 5, 15, 8);
+            tree.insertRange(range);
+            tree.delete(8);
+        }
+
+        @Test
+        void givenLeftLeafKey_WhenTreeIs12345_ThenBeOk() {
+            List<Integer> range = Arrays.asList(1, 2, 3, 4, 5);
+            tree.insertRange(range);
+            tree.delete(1);
+
+        }
+
+        @Test
+        void givenMiddleLeafKey_WhenTreeIs12345_ThenBeOk() {
+            List<Integer> range = Arrays.asList(1, 2, 3, 4, 5);
+            tree.insertRange(range);
+            tree.delete(3);
+
+        }
+
+        @Test
+        void givenRightLeafKey_WhenTreeIs12345_ThenBeOk() {
+            List<Integer> range = Arrays.asList(1, 2, 3, 4, 5);
+            tree.insertRange(range);
+            tree.delete(5);
+
+        }
+
+
+        @Test
+        void givenLeafKey_WhenMergeLeft_ThenBeOk() {
+            List<Integer> range = Arrays.asList(0, 10, 20, 5, 15, 8, 12);
+            tree.insertRange(range);
+
+        }
     }
+
 
     @Nested
     class FindTests {
@@ -442,7 +545,7 @@ class BTreeTest {
                 void given0_WhenTreeIs111_ThenReturn111() {
                     tree.insertRange(Arrays.asList(1, 1, 1));
                     ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findGreater(0);
-                    assertEquals(Arrays.asList(1,1,1), actualVals);
+                    assertEquals(Arrays.asList(1, 1, 1), actualVals);
                 }
 
                 @Test
@@ -456,7 +559,7 @@ class BTreeTest {
                 void given1_WhenTreeIs11223_ThenReturn223() {
                     tree.insertRange(Arrays.asList(1, 1, 2, 2, 3));
                     ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findGreater(1);
-                    assertEquals(Arrays.asList( 2, 2,3), actualVals);
+                    assertEquals(Arrays.asList(2, 2, 3), actualVals);
                 }
 
                 @Test
@@ -470,25 +573,26 @@ class BTreeTest {
                 void given5_WhenTreeIs11to778_ThenReturnEveryPairLessThen5() {
                     tree.insertRange(Arrays.asList(1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8));
                     ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findGreater(5);
-                    assertEquals(Arrays.asList( 6, 6, 7, 7, 8), actualVals);
+                    assertEquals(Arrays.asList(6, 6, 7, 7, 8), actualVals);
                 }
 
                 @Test
                 void given5_WhenTreeIs11to77BackWards_ThenReturnEveryPair11to77() {
                     tree.insertRange(Arrays.asList(8, 7, 7, 6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1));
                     ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findGreater(5);
-                    assertEquals(Arrays.asList( 6, 6, 7, 7, 8), actualVals);
+                    assertEquals(Arrays.asList(6, 6, 7, 7, 8), actualVals);
                 }
 
                 @Test
                 void given1to7_WhenTreeIs11to77RandomOrder_ThenReturnEveryPair11to77() {
                     tree.insertRange(Arrays.asList(5, 7, 3, 1, 2, 6, 4, 8, 7, 1, 6, 4, 2, 5, 3));
                     ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findGreater(5);
-                    assertEquals(Arrays.asList( 6, 6, 7, 7, 8), actualVals);
+                    assertEquals(Arrays.asList(6, 6, 7, 7, 8), actualVals);
                 }
             }
 
         }
+
         @Nested
         class FindBetweenTests {
             @Nested
@@ -498,7 +602,7 @@ class BTreeTest {
                     List<Integer> range = Arrays.asList(1, 2, 3);
                     tree.insertRange(range);
 
-                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(0,4);
+                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(0, 4);
 
 
                     assertEquals(Arrays.asList(1, 2, 3), actualVals);
@@ -509,9 +613,9 @@ class BTreeTest {
                     List<Integer> range = Arrays.asList(1, 2, 3);
                     tree.insertRange(range);
 
-                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(0,3);
+                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(0, 3);
 
-                    assertEquals(Arrays.asList(1,2,3), actualVals);
+                    assertEquals(Arrays.asList(1, 2, 3), actualVals);
                 }
 
                 @Test
@@ -519,63 +623,69 @@ class BTreeTest {
                     List<Integer> range = Arrays.asList(1, 2, 3);
                     tree.insertRange(range);
 
-                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(0,2);
+                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(0, 2);
 
-                    assertEquals(Arrays.asList(1,2), actualVals);
+                    assertEquals(Arrays.asList(1, 2), actualVals);
                 }
+
                 @Test
                 void given0and1_WhenTreeIs1to3_ThenReturn1() {
                     List<Integer> range = Arrays.asList(1, 2, 3);
                     tree.insertRange(range);
 
-                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(0,1);
+                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(0, 1);
 
 
                     assertEquals(Arrays.asList(1), actualVals);
                 }
+
                 @Test
                 void givenMin1and0_WhenTreeIs1to3_ThenReturnEmpty() {
                     List<Integer> range = Arrays.asList(1, 2, 3);
                     tree.insertRange(range);
 
-                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(-1,0);
+                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(-1, 0);
 
                     assertEquals(Collections.emptyList(), actualVals);
                 }
+
                 @Test
                 void givenMin1and10_WhenTreeIs1to3_ThenReturnEmpty() {
                     List<Integer> range = Arrays.asList(1, 2, 3);
                     tree.insertRange(range);
 
-                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(-1,10);
+                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(-1, 10);
 
                     assertEquals(Arrays.asList(1, 2, 3), actualVals);
                 }
+
                 @Test
                 void given0and0_WhenTreeIs1to3_ThenReturnEmpty() {
                     List<Integer> range = Arrays.asList(1, 2, 3);
                     tree.insertRange(range);
 
-                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(0,0);
+                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(0, 0);
 
                     assertEquals(Collections.emptyList(), actualVals);
                 }
+
                 @Test
                 void given5and5_WhenTreeIs1to3_ThenReturnEmpty() {
                     List<Integer> range = Arrays.asList(1, 2, 3);
                     tree.insertRange(range);
 
-                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(5,5);
+                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(5, 5);
 
                     assertEquals(Collections.emptyList(), actualVals);
                 }
+
                 @ParameterizedTest
-                @ValueSource(ints = {1,2,3})
+                @ValueSource(ints = {1, 2, 3})
                 void givenValAndVal1to3_WhenTreeIs1to3_ThenVal(Integer val) {
                     List<Integer> range = Arrays.asList(1, 2, 3);
                     tree.insertRange(range);
 
-                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(val,val);
+                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(val, val);
 
                     assertEquals(Arrays.asList(val), actualVals);
                 }
@@ -588,54 +698,55 @@ class BTreeTest {
                 @Test
                 void given0and2_WhenTreeIs111_ThenReturn111() {
                     tree.insertRange(Arrays.asList(1, 1, 1));
-                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(0,2);
-                    assertEquals(Arrays.asList(1,1,1), actualVals);
+                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(0, 2);
+                    assertEquals(Arrays.asList(1, 1, 1), actualVals);
                 }
 
                 @Test
                 void given3and4_WhenTreeIs11223_ThenReturn3() {
                     tree.insertRange(Arrays.asList(1, 1, 2, 2, 3));
-                    ArrayList<Integer> actualVals = (ArrayList<Integer>)  tree.findInRange(3,4);
+                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(3, 4);
                     assertEquals(Arrays.asList(3), actualVals);
                 }
 
                 @Test
                 void given2and3_WhenTreeIs11223_ThenReturn223() {
                     tree.insertRange(Arrays.asList(1, 1, 2, 2, 3));
-                    ArrayList<Integer> actualVals = (ArrayList<Integer>)  tree.findInRange(2,3);
-                    assertEquals(Arrays.asList( 2, 2,3), actualVals);
+                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(2, 3);
+                    assertEquals(Arrays.asList(2, 2, 3), actualVals);
                 }
 
                 @Test
                 void given0and5_WhenTreeIs11223_ThenReturn11223() {
                     tree.insertRange(Arrays.asList(1, 1, 2, 2, 3));
-                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(0,5);
+                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(0, 5);
                     assertEquals(Arrays.asList(1, 1, 2, 2, 3), actualVals);
                 }
 
                 @Test
                 void given2and4_WhenTreeIs11to778_ThenReturn223344() {
                     tree.insertRange(Arrays.asList(1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8));
-                    ArrayList<Integer> actualVals = (ArrayList<Integer>)  tree.findInRange(2,4);
+                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(2, 4);
                     assertEquals(Arrays.asList(2, 2, 3, 3, 4, 4), actualVals);
                 }
 
                 @Test
                 void given5_WhenTreeIs11to77BackWards_ThenReturn223344() {
                     tree.insertRange(Arrays.asList(8, 7, 7, 6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1));
-                    ArrayList<Integer> actualVals = (ArrayList<Integer>)  tree.findInRange(2,4);
+                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(2, 4);
                     assertEquals(Arrays.asList(2, 2, 3, 3, 4, 4), actualVals);
                 }
 
                 @Test
                 void given1to7_WhenTreeIs11to77RandomOrder_ThenReturn223344() {
                     tree.insertRange(Arrays.asList(5, 7, 3, 1, 2, 6, 4, 8, 7, 1, 6, 4, 2, 5, 3));
-                    ArrayList<Integer> actualVals = (ArrayList<Integer>)  tree.findInRange(2,4);
+                    ArrayList<Integer> actualVals = (ArrayList<Integer>) tree.findInRange(2, 4);
                     assertEquals(Arrays.asList(2, 2, 3, 3, 4, 4), actualVals);
                 }
             }
 
         }
+
         @Nested
         class FindMinMaxTests {
             @Nested
@@ -645,7 +756,7 @@ class BTreeTest {
                     List<Integer> range = Arrays.asList(1, 2, 3);
                     tree.insertRange(range);
 
-                    Integer actualVal =  tree.findMin();
+                    Integer actualVal = tree.findMin();
 
 
                     assertEquals(1, actualVal);
@@ -654,26 +765,27 @@ class BTreeTest {
                 @Test
                 void given_WhenTreeIs11to778_ThenReturn1() {
                     tree.insertRange(Arrays.asList(1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8));
-                    Integer actualVal =  tree.findMin();
+                    Integer actualVal = tree.findMin();
                     assertEquals(1, actualVal);
                 }
 
                 @Test
                 void given_WhenTreeIs11to77BackWards_ThenReturn1() {
                     tree.insertRange(Arrays.asList(8, 7, 7, 6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1));
-                    Integer actualVal =  tree.findMin();
+                    Integer actualVal = tree.findMin();
                     assertEquals(1, actualVal);
                 }
 
                 @Test
                 void given_WhenTreeIs11to77RandomOrder_ThenReturn1() {
                     tree.insertRange(Arrays.asList(5, 7, 3, 1, 2, 6, 4, 8, 7, 1, 6, 4, 2, 5, 3));
-                    Integer actualVal =  tree.findMin();
+                    Integer actualVal = tree.findMin();
                     assertEquals(1, actualVal);
                 }
 
 
             }
+
             @Nested
             class FindMaxTests {
                 @Test
@@ -681,7 +793,7 @@ class BTreeTest {
                     List<Integer> range = Arrays.asList(1, 2, 3);
                     tree.insertRange(range);
 
-                    Integer actualVal =  tree.findMax();
+                    Integer actualVal = tree.findMax();
 
 
                     assertEquals(3, actualVal);
@@ -690,21 +802,21 @@ class BTreeTest {
                 @Test
                 void given_WhenTreeIs11to778_ThenReturn8() {
                     tree.insertRange(Arrays.asList(1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8));
-                    Integer actualVal =  tree.findMax();
+                    Integer actualVal = tree.findMax();
                     assertEquals(8, actualVal);
                 }
 
                 @Test
                 void given_WhenTreeIs11to77BackWards_ThenReturn8() {
                     tree.insertRange(Arrays.asList(8, 7, 7, 6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1));
-                    Integer actualVal =  tree.findMax();
+                    Integer actualVal = tree.findMax();
                     assertEquals(8, actualVal);
                 }
 
                 @Test
                 void given_WhenTreeIs11to77RandomOrder_ThenReturn8() {
                     tree.insertRange(Arrays.asList(5, 7, 3, 1, 2, 6, 4, 8, 7, 1, 6, 4, 2, 5, 3));
-                    Integer actualVal =  tree.findMax();
+                    Integer actualVal = tree.findMax();
                     assertEquals(8, actualVal);
                 }
 
@@ -1105,9 +1217,9 @@ class BTreeTest {
     }
 
 
-
     @Nested
     class iteratorTests {
+
         @Nested
         class HasNextTests {
             @Test
@@ -1115,18 +1227,20 @@ class BTreeTest {
                 Iterator<Integer> it = tree.iterator();
                 assertEquals(false, it.hasNext());
             }
+
             @Test
             void givenNullPosIterator_WhenTreeIsNotEmpty_ThenHasNextReturnTrue() {
 
-                tree.insertRange(Arrays.asList(1,2,3));
+                tree.insertRange(Arrays.asList(1, 2, 3));
 
                 Iterator<Integer> it = tree.iterator();
-                boolean actualVal =it.hasNext();
-                assertEquals(true,actualVal );
+                boolean actualVal = it.hasNext();
+                assertEquals(true, actualVal);
             }
+
             @Test
             void givenLastPosIterator_WhenTreeIsNotEmpty_ThenHasNextReturnFalse() {
-                tree.insertRange(Arrays.asList(1,2,3));
+                tree.insertRange(Arrays.asList(1, 2, 3));
 
                 Iterator<Integer> it = tree.iterator();
                 it.next();
@@ -1134,6 +1248,56 @@ class BTreeTest {
                 it.next();
 
                 assertEquals(false, it.hasNext());
+            }
+        }
+
+        @Nested
+        class LoopTests {
+            @Test
+            void givenPrintLn_WhenTreeIs12345_ThenPrintVals() {
+                tree.insertRange(Arrays.asList(1, 2, 3, 4, 5));
+                for (Object val : tree)
+                    System.out.println(val);
+            }
+
+            @Test
+            void givenPrintLn_WhenTreeIs12345BackWards_ThenPrintVals() {
+                tree.insertRange(Arrays.asList(5, 4, 3, 2, 1));
+                for (Object val : tree)
+                    System.out.println(val);
+            }
+
+            @Test
+            void givenPrintLn_WhenTreeIs12345RandomOrder_ThenPrintVals() {
+                tree.insertRange(Arrays.asList(4, 2, 3, 1, 5));
+                for (Object val : tree)
+                    System.out.println(val);
+            }
+
+            @Test
+            void given3Trees_WhenTreesWithDifferentNodeOrder_ThenPrintSameSequence() {
+                BTree<Integer> forwardOrder = new BTree<Integer>(3);
+                BTree<Integer> backwardOrder = new BTree<Integer>(3);
+                BTree<Integer> randomOrder = new BTree<Integer>(3);
+
+                forwardOrder.insertRange(Arrays.asList(1, 2, 3, 4, 5));
+                backwardOrder.insertRange(Arrays.asList(5, 4, 3, 2, 1));
+                randomOrder.insertRange(Arrays.asList(4, 2, 3, 1, 5));
+
+                String s1 = "", s2 = "", s3 = "";
+                for (Object val : tree)
+                    s1 += val.toString() + " ";
+                for (Object val : tree)
+                    s2 += val.toString() + " ";
+                for (Object val : tree)
+                    s3 += val.toString() + " ";
+                String finalS1 = s1;
+                String finalS2 = s2;
+                String finalS3 = s3;
+                assertAll(
+                        () -> assertEquals(finalS1, finalS2),
+                        () -> assertEquals(finalS2, finalS3));
+
             }
         }
 
@@ -1151,6 +1315,7 @@ class BTreeTest {
                 );
 
             }
+
             @Test
             void givenNullPosIterator_WhenTreeIsOneNode_ThenNext2ReturnSecondtVal() {
                 tree.insertRange(Arrays.asList(1, 2));
@@ -1193,9 +1358,10 @@ class BTreeTest {
                         () -> assertEquals((Integer) 3, val3)
                 );
             }
+
             @Test
             void givenNullPosIterator_WhenTreeIs12345_ThenNextReturn1to5() {
-                tree.insertRange(Arrays.asList(1, 2, 3,4,5));
+                tree.insertRange(Arrays.asList(1, 2, 3, 4, 5));
 
                 Iterator<Integer> it = tree.iterator();
                 Integer val1 = it.next();
@@ -1219,10 +1385,10 @@ class BTreeTest {
             void givenNullPointIterator_WhenTree1to7_ThenFindReturnThisValue(Integer Val) {
                 List<Integer> range = Arrays.asList(1, 2, 3, 4, 5, 6, 7);
                 tree.insertRange(range);
-                Iterator<Integer> it =  tree.iterator();
+                Iterator<Integer> it = tree.iterator();
 
-                Integer lastVal=null;
-                for (int i =0;i<Val;i++){
+                Integer lastVal = null;
+                for (int i = 0; i < Val; i++) {
                     lastVal = it.next();
                 }
 
@@ -1235,10 +1401,10 @@ class BTreeTest {
             void givenNullPointIterator_WhenTree1to18_ThenFindReturnThisValue(Integer Val) {
                 List<Integer> range = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18);
                 tree.insertRange(range);
-                Iterator<Integer> it =  tree.iterator();
+                Iterator<Integer> it = tree.iterator();
 
-                Integer lastVal=null;
-                for (int i =0;i<Val;i++){
+                Integer lastVal = null;
+                for (int i = 0; i < Val; i++) {
                     lastVal = it.next();
                 }
 
@@ -1250,10 +1416,10 @@ class BTreeTest {
             void givenNullPointIterator_WhenTree1to18InsertedBackwards_ThenFindReturnThisValue(Integer Val) {
                 List<Integer> range = Arrays.asList(18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1);
                 tree.insertRange(range);
-                Iterator<Integer> it =  tree.iterator();
+                Iterator<Integer> it = tree.iterator();
 
-                Integer lastVal=null;
-                for (int i =0;i<Val;i++){
+                Integer lastVal = null;
+                for (int i = 0; i < Val; i++) {
                     lastVal = it.next();
                 }
 
@@ -1266,10 +1432,10 @@ class BTreeTest {
             void givenNullPointIterator_WhenTree1to18InsertedRandomly_ThenFindReturnThisValue(Integer Val) {
                 List<Integer> range = Arrays.asList(6, 5, 15, 7, 16, 4, 18, 2, 14, 9, 13, 17, 1, 12, 8, 10, 3, 11);
                 tree.insertRange(range);
-                Iterator<Integer> it =  tree.iterator();
+                Iterator<Integer> it = tree.iterator();
 
-                Integer lastVal=null;
-                for (int i =0;i<Val;i++){
+                Integer lastVal = null;
+                for (int i = 0; i < Val; i++) {
                     lastVal = it.next();
                 }
 

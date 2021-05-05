@@ -14,19 +14,19 @@ public abstract class NodeChecker<T extends Comparable<T>> {
 
     public abstract boolean isNeedToStop(T key);
 
-    public Collection<T> DoSearch(Node<T> Root) {
+    public Collection<T> doSearch(Node<T> Root) {
         checkNode(Root);
         return returnCollection;
     }
 
-    void checkNode(Node<T> node) {
+    protected void checkNode(Node<T> node) {
         if (!node.isLeaf)
             checkAsNode(node);
         else
             checkAsLeaf(node);
     }
 
-    void checkAsNode(Node<T> node) {
+    protected void checkAsNode(Node<T> node) {
 
         for (int i = 0; i < node.Keys.size(); i++) {
             T key = node.Keys.get(i);
@@ -36,7 +36,7 @@ public abstract class NodeChecker<T extends Comparable<T>> {
             }
 
             if (isKeyRequired(key))
-                this.returnCollection.add(key);
+                Action(key);
             else if (isNeedToStop(key)) return;
 
 
@@ -47,14 +47,16 @@ public abstract class NodeChecker<T extends Comparable<T>> {
     void checkKey(T key) {
     }
 
-    void checkAsLeaf(Node<T> node) {
+    protected void checkAsLeaf(Node<T> node) {
         for (T key : node.Keys) {
             if (isKeyRequired(key)) {
-                this.returnCollection.add(key);
-
+                Action(key);
             }
         }
 
+    }
+    protected void Action(T key){
+        this.returnCollection.add(key);
     }
 
     public NodeChecker() {
